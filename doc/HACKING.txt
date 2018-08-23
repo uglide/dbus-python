@@ -16,9 +16,9 @@ See UsingGit_ for some details.
 .. _UsingGit: http://www.freedesktop.org/wiki/UsingGit
 
 Anonymous access
-    ``git clone git://anongit.freedesktop.org/git/dbus/dbus-python``
-Committer access (requires freedesktop.org shell account)
-    ``git clone git+ssh://git.freedesktop.org/git/dbus/dbus-python``
+    ``git clone https://gitlab.freedesktop.org/dbus/dbus-python.git``
+Committer access
+    ``git clone git@gitlab.freedesktop.org:dbus/dbus-python.git``
 
 dbus-gmain is maintained via `git subtree`. To update, assuming you have
 a checkout of the dbus-gmain branch of the dbus-glib repository in
