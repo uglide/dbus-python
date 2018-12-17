@@ -30,8 +30,20 @@ srcdir="$(pwd)"
 builddir="$(mktemp -d -t "builddir.XXXXXX")"
 prefix="$(mktemp -d -t "prefix.XXXXXX")"
 
-if [ -n "$dbus_ci_parallel" ]; then
+if [ -z "$dbus_ci_parallel" ]; then
 	dbus_ci_parallel=2
+fi
+
+if [ -n "$ci_docker" ]; then
+	exec docker run \
+		--env=ci_distro="${ci_distro}" \
+		--env=ci_docker="" \
+		--env=ci_suite="${ci_suite}" \
+		--env=dbus_ci_parallel="${dbus_ci_parallel}" \
+		--env=dbus_ci_system_python="${dbus_ci_system_python-}" \
+		--privileged \
+		ci-image \
+		tools/ci-build.sh
 fi
 
 if [ -n "$TRAVIS" ] && [ -n "$dbus_ci_system_python" ]; then

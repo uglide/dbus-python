@@ -29,7 +29,7 @@ cache:
     - $HOME/.ccache
 install:
   - test -z "$dbus_ci_system_python" || deactivate
-  - tools/travis-ci-setup.sh
+  - ./tools/ci-install.sh
 python:
   - "3.6"
   - "3.6-dev"
@@ -53,5 +53,11 @@ matrix:
     - python: "3.5"
       env:
         dbus_ci_system_python=python3-dbg
+    - python: "3.4"
+      env:
+        ci_docker=debian:jessie-slim ci_suite=jessie dbus_ci_system_python=python3
+    - python: "3.4"
+      env:
+        ci_docker=debian:jessie-slim ci_suite=jessie dbus_ci_system_python=python3-dbg
 
 # vim:set sw=2 sts=2 et:
