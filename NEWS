@@ -1,6 +1,12 @@
 D-Bus Python Bindings 1.2.10 (UNRELEASED)
 =========================================
 
+Dependencies:
+
+• dbus 1.8 was already required, but is now more strongly required,
+  and the remaining workarounds used to test on Ubuntu 14.04 'trusty'
+  have been removed.
+
 Fixes:
 
 • Avoid a long-standing race condition in the automated tests

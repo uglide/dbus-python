@@ -506,7 +506,8 @@ class TestMessageMarshalling(unittest.TestCase):
             try:
                 s.append(noncharacter, signature='s')
             except UnicodeError:
-                pass  # libdbus < 1.6.10 disallows noncharacters
+                raise AssertionError(
+                    'Appending %r should succeed' % noncharacter)
             else:
                 pass  # libdbus >= 1.6.10 allows noncharacters
 

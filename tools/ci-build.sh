@@ -77,39 +77,6 @@ elif [ -n "$TRAVIS_PYTHON_VERSION" ]; then
 	esac
 fi
 
-# dbus-run-session is significantly nicer to debug than with-session-bus.sh,
-# but isn't in the version of dbus in Ubuntu 14.10. Take the version from
-# dbus-1.10.0 and alter it to be standalone.
-if ! command -v dbus-run-session >/dev/null; then
-	drsdir="$(mktemp -d -t "d-r-s.XXXXXX")"
-	curl -o "$drsdir/dbus-run-session.c" \
-		"https://cgit.freedesktop.org/dbus/dbus/plain/tools/dbus-run-session.c?h=dbus-1.10.0"
-	sed -e 's/^	//' > "$drsdir/config.h" <<EOF
-	#include <stdlib.h>
-
-	#define VERSION "1.10.0~local"
-	#define dbus_setenv my_dbus_setenv
-
-	static inline int
-	my_dbus_setenv (const char *name, const char *value)
-	{
-		if (value)
-			return !setenv (name, value, 1);
-		else
-			return !unsetenv (name);
-	}
-EOF
-	cc -I"${drsdir}" -o"${drsdir}/dbus-run-session" \
-		"${drsdir}/dbus-run-session.c" \
-		$(pkg-config --cflags --libs dbus-1) \
-		${NULL}
-	export PATH="${drsdir}:$PATH"
-
-	# Force the build to be run even though dbus is less than version 1.8.
-	export DBUS_CFLAGS="$(pkg-config --cflags dbus-1)"
-	export DBUS_LIBS="$(pkg-config --libs dbus-1)"
-fi
-
 NOCONFIGURE=1 ./autogen.sh
 
 e=0

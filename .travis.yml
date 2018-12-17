@@ -21,7 +21,7 @@
 # DEALINGS IN THE SOFTWARE.
 
 sudo: required
-dist: trusty
+dist: xenial
 language: python
 cache:
   pip: true
@@ -31,10 +31,10 @@ install:
   - test -z "$dbus_ci_system_python" || deactivate
   - tools/travis-ci-setup.sh
 python:
-  - "3.5"
-  - "3.5-dev"
   - "3.6"
   - "3.6-dev"
+  - "3.7"
+  - "3.7-dev"
   - "nightly"
 script:
   - PATH="/usr/lib/ccache:$PATH" ./tools/ci-build.sh
@@ -47,10 +47,10 @@ matrix:
     - python: "2.7"
       env:
         dbus_ci_system_python=python-dbg
-    - python: "3.4"
+    - python: "3.5"
       env:
         dbus_ci_system_python=python3
-    - python: "3.4"
+    - python: "3.5"
       env:
         dbus_ci_system_python=python3-dbg
 
