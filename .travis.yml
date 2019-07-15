@@ -35,7 +35,6 @@ install:
 python:
   - "3.6"
   - "3.6-dev"
-  - "3.7"
   - "3.7-dev"
   - "nightly"
 script:
@@ -55,5 +54,11 @@ matrix:
     - python: "3.5"
       env:
         dbus_ci_system_python=python3-dbg
+    - python: "3.7"
+      env:
+        ci_distro=debian ci_docker=debian:buster-slim ci_suite=buster dbus_ci_system_python=python3
+    - python: "3.7"
+      env:
+        ci_distro=debian ci_docker=debian:buster-slim ci_suite=buster dbus_ci_system_python=python3-dbg
 
 # vim:set sw=2 sts=2 et:

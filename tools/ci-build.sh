@@ -43,6 +43,8 @@ if [ -n "$ci_docker" ]; then
 		--env=ci_suite="${ci_suite}" \
 		--env=dbus_ci_parallel="${dbus_ci_parallel}" \
 		--env=dbus_ci_system_python="${dbus_ci_system_python-}" \
+		--env=TRAVIS="${TRAVIS-}" \
+		--env=TRAVIS_PYTHON_VERSION="${TRAVIS_PYTHON_VERSION-}" \
 		--privileged \
 		ci-image \
 		tools/ci-build.sh
