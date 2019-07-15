@@ -62,6 +62,9 @@ else
     sudo=sudo
 fi
 
+have_system_sphinx=
+have_system_tappy=
+
 if [ -n "$ci_docker" ]; then
     sed \
         -e "s/@ci_distro@/${ci_distro}/" \
@@ -123,6 +126,29 @@ case "$ci_distro" in
             if [ "$dbus_ci_system_python" = python ]; then
                 sudo apt-get -qq -y install python-gobject-2
             fi
+
+            case "$ci_suite" in
+                (jessie|xenial)
+                    ;;
+
+                (*)
+                    $sudo apt-get -qq -y install ${dbus_ci_system_python%-dbg}-tap
+                    have_system_tappy=yes
+                    ;;
+            esac
+
+            case "$ci_suite" in
+                (jessie|xenial|stretch|bionic)
+                    ;;
+
+                (*)
+                    $sudo apt-get -qq -y install \
+                        ${dbus_ci_system_python%-dbg}-sphinx \
+                        ${dbus_ci_system_python%-dbg}-sphinx-rtd-theme \
+                        ${NULL}
+                    have_system_sphinx=yes
+                    ;;
+            esac
         fi
 
         if [ "$ci_in_docker" = yes ]; then
@@ -150,16 +176,28 @@ case "$ci_distro" in
         ;;
 esac
 
-if [ -n "${dbus_ci_system_python-}" ]; then
+if [ -n "$have_system_sphinx" ]; then
+    :
+elif [ -n "${dbus_ci_system_python-}" ]; then
     "$dbus_ci_system_python" -m pip install --user \
         sphinx \
         sphinx_rtd_theme \
-        tap.py \
         ${NULL}
 else
     pip install \
         sphinx \
         sphinx_rtd_theme \
+        ${NULL}
+fi
+
+if [ -n "$have_system_tappy" ]; then
+    :
+elif [ -n "${dbus_ci_system_python-}" ]; then
+    "$dbus_ci_system_python" -m pip install --user \
+        tap.py \
+        ${NULL}
+else
+    pip install \
         tap.py \
         ${NULL}
 fi
