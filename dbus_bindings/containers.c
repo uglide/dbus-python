@@ -777,15 +777,21 @@ dbus_py_init_container_types(void)
 
     DBusPyArray_Type.tp_base = &PyList_Type;
     if (PyType_Ready(&DBusPyArray_Type) < 0) return 0;
+#ifndef PY3
     DBusPyArray_Type.tp_print = NULL;
+#endif
 
     DBusPyDict_Type.tp_base = &PyDict_Type;
     if (PyType_Ready(&DBusPyDict_Type) < 0) return 0;
+#ifndef PY3
     DBusPyDict_Type.tp_print = NULL;
+#endif
 
     DBusPyStruct_Type.tp_base = &PyTuple_Type;
     if (PyType_Ready(&DBusPyStruct_Type) < 0) return 0;
+#ifndef PY3
     DBusPyStruct_Type.tp_print = NULL;
+#endif
 
     return 1;
 }

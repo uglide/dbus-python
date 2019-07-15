@@ -130,12 +130,16 @@ dbus_py_init_float_types(void)
 {
     DBusPyDouble_Type.tp_base = &DBusPyFloatBase_Type;
     if (PyType_Ready(&DBusPyDouble_Type) < 0) return 0;
+#ifndef PY3
     DBusPyDouble_Type.tp_print = NULL;
+#endif
 
 #ifdef WITH_DBUS_FLOAT32
     DBusPyFloat_Type.tp_base = &DBusPyFloatBase_Type;
     if (PyType_Ready(&DBusPyFloat_Type) < 0) return 0;
+#ifndef PY3
     DBusPyFloat_Type.tp_print = NULL;
+#endif
 #endif
 
     return 1;

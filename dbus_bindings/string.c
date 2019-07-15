@@ -339,7 +339,9 @@ dbus_py_init_string_types(void)
     }
     DBusPyString_Type.tp_base = &PyUnicode_Type;
     if (PyType_Ready(&DBusPyString_Type) < 0) return 0;
+#ifndef PY3
     DBusPyString_Type.tp_print = NULL;
+#endif
 
 #ifndef PY3
     DBusPyUTF8String_Type.tp_base = &DBusPyStrBase_Type;
@@ -349,7 +351,9 @@ dbus_py_init_string_types(void)
 
     DBusPyObjectPath_Type.tp_base = &DBusPyStrBase_Type;
     if (PyType_Ready(&DBusPyObjectPath_Type) < 0) return 0;
+#ifndef PY3
     DBusPyObjectPath_Type.tp_print = NULL;
+#endif
 
     return 1;
 }

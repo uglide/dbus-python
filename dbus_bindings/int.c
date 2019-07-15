@@ -721,35 +721,49 @@ dbus_py_init_int_types(void)
 {
     DBusPyInt16_Type.tp_base = &INTBASE;
     if (PyType_Ready(&DBusPyInt16_Type) < 0) return 0;
+#ifndef PY3
     /* disable the tp_print copied from PyInt_Type, so tp_repr gets called as
     desired */
     DBusPyInt16_Type.tp_print = NULL;
+#endif
 
     DBusPyUInt16_Type.tp_base = &INTBASE;
     if (PyType_Ready(&DBusPyUInt16_Type) < 0) return 0;
+#ifndef PY3
     DBusPyUInt16_Type.tp_print = NULL;
+#endif
 
     DBusPyInt32_Type.tp_base = &INTBASE;
     if (PyType_Ready(&DBusPyInt32_Type) < 0) return 0;
+#ifndef PY3
     DBusPyInt32_Type.tp_print = NULL;
+#endif
 
     DBusPyUInt32_Type.tp_base = &DBusPyLongBase_Type;
     if (PyType_Ready(&DBusPyUInt32_Type) < 0) return 0;
+#ifndef PY3
     DBusPyUInt32_Type.tp_print = NULL;
+#endif
 
 #if defined(DBUS_HAVE_INT64) && defined(HAVE_LONG_LONG)
     DBusPyInt64_Type.tp_base = &DBusPyLongBase_Type;
     if (PyType_Ready(&DBusPyInt64_Type) < 0) return 0;
+#ifndef PY3
     DBusPyInt64_Type.tp_print = NULL;
+#endif
 
     DBusPyUInt64_Type.tp_base = &DBusPyLongBase_Type;
     if (PyType_Ready(&DBusPyUInt64_Type) < 0) return 0;
+#ifndef PY3
     DBusPyUInt64_Type.tp_print = NULL;
+#endif
 #endif
 
     DBusPyBoolean_Type.tp_base = &INTBASE;
     if (PyType_Ready(&DBusPyBoolean_Type) < 0) return 0;
+#ifndef PY3
     DBusPyBoolean_Type.tp_print = NULL;
+#endif
 
     return 1;
 }

@@ -792,7 +792,6 @@ dbus_py_init_abstract(void)
 #ifdef PY3
     DBusPyBytesBase_Type.tp_base = &PyBytes_Type;
     if (PyType_Ready(&DBusPyBytesBase_Type) < 0) return 0;
-    DBusPyBytesBase_Type.tp_print = NULL;
 #else
     DBusPyIntBase_Type.tp_base = &PyInt_Type;
     if (PyType_Ready(&DBusPyIntBase_Type) < 0) return 0;
@@ -803,15 +802,21 @@ dbus_py_init_abstract(void)
 
     DBusPyFloatBase_Type.tp_base = &PyFloat_Type;
     if (PyType_Ready(&DBusPyFloatBase_Type) < 0) return 0;
+#ifndef PY3
     DBusPyFloatBase_Type.tp_print = NULL;
+#endif
 
     DBusPyLongBase_Type.tp_base = &PyLong_Type;
     if (PyType_Ready(&DBusPyLongBase_Type) < 0) return 0;
+#ifndef PY3
     DBusPyLongBase_Type.tp_print = NULL;
+#endif
 
     DBusPyStrBase_Type.tp_base = &NATIVESTR_TYPE;
     if (PyType_Ready(&DBusPyStrBase_Type) < 0) return 0;
+#ifndef PY3
     DBusPyStrBase_Type.tp_print = NULL;
+#endif
 
     return 1;
 }

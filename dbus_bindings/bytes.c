@@ -280,11 +280,15 @@ dbus_py_init_byte_types(void)
 {
     DBusPyByte_Type.tp_base = &DBUS_PY_BYTE_BASE;
     if (PyType_Ready(&DBusPyByte_Type) < 0) return 0;
+#ifndef PY3
     DBusPyByte_Type.tp_print = NULL;
+#endif
 
     DBusPyByteArray_Type.tp_base = &DBUS_PY_BYTEARRAY_BASE;
     if (PyType_Ready(&DBusPyByteArray_Type) < 0) return 0;
+#ifndef PY3
     DBusPyByteArray_Type.tp_print = NULL;
+#endif
 
     return 1;
 }

@@ -235,7 +235,9 @@ dbus_py_init_signature(void)
 
     DBusPySignature_Type.tp_base = &DBusPyStrBase_Type;
     if (PyType_Ready(&DBusPySignature_Type) < 0) return 0;
+#ifndef PY3
     DBusPySignature_Type.tp_print = NULL;
+#endif
 
     return 1;
 }
