@@ -6,6 +6,10 @@ Dependencies:
 • dbus 1.8 was already required, but is now more strongly required,
   and the remaining workarounds used to test on Ubuntu 14.04 'trusty'
   have been removed.
+• When using Python 3, version 3.5 or later is strongly recommended.
+  Python 3.4 security support ended in March 2019. No specific
+  incompatibilities are known, but using dbus-python on Python 3.4 is
+  no longer tested or supported.
 
 Fixes:
 

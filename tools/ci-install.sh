@@ -52,7 +52,7 @@ NULL=
 
 # ci_suite:
 # OS suite (release, branch) in which we are testing.
-# Typical values for ci_distro=debian: sid, jessie
+# Typical values for ci_distro=debian: sid, buster
 # Typical values for ci_distro=fedora might be 25, rawhide
 : "${ci_suite:=xenial}"
 
@@ -134,9 +134,9 @@ case "$ci_distro" in
         fi
 
         case "$ci_suite" in
-            (jessie|xenial)
-                # autoconf-archive in Debian 8 and Ubuntu 16.04 is too old,
-                # use the one from Debian 9 instead
+            (xenial)
+                # autoconf-archive in Ubuntu 16.04 is too old, use the one
+                # from Debian 9 instead
                 wget http://deb.debian.org/debian/pool/main/a/autoconf-archive/autoconf-archive_20160916-1_all.deb
                 $sudo dpkg -i autoconf-archive_*_all.deb
                 rm autoconf-archive_*_all.deb
