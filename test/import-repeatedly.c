@@ -1,4 +1,5 @@
 /* Regression test for https://bugs.freedesktop.org/show_bug.cgi?id=23831 */
+/* SPDX-License-Identifier: MIT */
 
 #include <stdio.h>
 

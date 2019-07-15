@@ -1,4 +1,5 @@
 # Python 2 / Python 3 compatibility helpers.
+# SPDX-License-Identifier: MIT
 
 import sys
 

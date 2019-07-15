@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# SPDX-License-Identifier: MIT
+
 import os
 
 SRCDIR = os.environ.get('DBUS_TOP_SRCDIR', '.')

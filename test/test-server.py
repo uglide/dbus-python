@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# SPDX-License-Identifier: MIT
+
 from dbus.mainloop.glib import DBusGMainLoop
 
 import dbus

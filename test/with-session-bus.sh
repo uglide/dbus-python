@@ -3,9 +3,12 @@
 #
 # Copyright (C) 2007-2008 Collabora Ltd. <http://www.collabora.co.uk/>
 #
+# SPDX-License-Identifier: FSFAP
+#
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
-# notice and this notice are preserved.
+# notice and this notice are preserved. This file is offered as-is,
+# without any warranty.
 
 set -e
 
