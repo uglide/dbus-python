@@ -410,7 +410,12 @@ EXTRA_DIST += \
 	$(NULL)
 
 install-data-local: install-data-local-sphinx
+uninstall-local: uninstall-local-pycache
 uninstall-local: uninstall-local-sphinx
+
+uninstall-local-pycache:
+	rm -fr $(DESTDIR)$(pythondir)/dbus/__pycache__
+	rm -fr $(DESTDIR)$(pythondir)/dbus/mainloop/__pycache__
 
 if ENABLE_DOCUMENTATION
 all: doc/_build/.stamp
