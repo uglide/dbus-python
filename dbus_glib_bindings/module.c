@@ -170,7 +170,7 @@ static PyMethodDef module_functions[] = {
     {"setup_with_g_main", setup_with_g_main, METH_VARARGS,
      setup_with_g_main__doc__},
     {"gthreads_init", gthreads_init, METH_NOARGS, gthreads_init__doc__},
-    {"DBusGMainLoop", (PyCFunction)DBusGMainLoop,
+    {"DBusGMainLoop", (PyCFunction) (void (*)(void))DBusGMainLoop,
      METH_VARARGS|METH_KEYWORDS, DBusGMainLoop__doc__},
     {NULL, NULL, 0, NULL}
 };

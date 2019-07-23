@@ -189,7 +189,7 @@ dbus_py_unix_fd_get_fd(PyObject *self)
 }
 
 static PyMethodDef UnixFd_methods[] = {
-    {"take", (PyCFunction) UnixFd_take, METH_NOARGS, UnixFd_take__doc__ },
+    {"take", (PyCFunction) (void (*)(void)) UnixFd_take, METH_NOARGS, UnixFd_take__doc__ },
     {NULL}
 };
 

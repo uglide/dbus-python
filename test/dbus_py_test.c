@@ -114,7 +114,7 @@ UnusableMainLoop (PyObject *always_null UNUSED, PyObject *args, PyObject *kwargs
 }
 
 static PyMethodDef module_functions[] = {
-    {"UnusableMainLoop", (PyCFunction)UnusableMainLoop,
+    {"UnusableMainLoop", (PyCFunction) (void (*)(void))UnusableMainLoop,
      METH_VARARGS|METH_KEYWORDS, "Return a main loop that fails to attach"},
     {NULL, NULL, 0, NULL}
 };

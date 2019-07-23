@@ -1035,7 +1035,10 @@ PyDoc_STRVAR(set_unique_name__doc__,
 "already been set.\n");
 
 struct PyMethodDef DBusPyConnection_tp_methods[] = {
-#define ENTRY(name, flags) {#name, (PyCFunction)Connection_##name, flags, Connection_##name##__doc__}
+#define ENTRY(name, flags) {\
+    #name, (PyCFunction) (void (*)(void)) Connection_##name, \
+    flags, Connection_##name##__doc__ \
+}
     ENTRY(_require_main_loop, METH_NOARGS),
     ENTRY(close, METH_NOARGS),
     ENTRY(flush, METH_NOARGS),
@@ -1053,13 +1056,13 @@ struct PyMethodDef DBusPyConnection_tp_methods[] = {
     ENTRY(send_message_with_reply_and_block, METH_VARARGS),
     ENTRY(_unregister_object_path, METH_VARARGS|METH_KEYWORDS),
     ENTRY(list_exported_child_objects, METH_VARARGS|METH_KEYWORDS),
-    {"_new_for_bus", (PyCFunction)DBusPyConnection_NewForBus,
+    {"_new_for_bus", (PyCFunction) (void (*)(void)) DBusPyConnection_NewForBus,
         METH_CLASS|METH_VARARGS|METH_KEYWORDS,
         new_for_bus__doc__},
-    {"get_unique_name", (PyCFunction)DBusPyConnection_GetUniqueName,
+    {"get_unique_name", (PyCFunction) (void (*)(void)) DBusPyConnection_GetUniqueName,
         METH_NOARGS,
         get_unique_name__doc__},
-    {"set_unique_name", (PyCFunction)DBusPyConnection_SetUniqueName,
+    {"set_unique_name", (PyCFunction) (void (*)(void)) DBusPyConnection_SetUniqueName,
         METH_VARARGS,
         set_unique_name__doc__},
     ENTRY(set_allow_anonymous, METH_VARARGS),

@@ -225,11 +225,11 @@ PendingCall_tp_dealloc (PendingCall *self)
 }
 
 static PyMethodDef PendingCall_tp_methods[] = {
-    {"block", (PyCFunction)PendingCall_block, METH_NOARGS,
+    {"block", (PyCFunction) (void (*)(void))PendingCall_block, METH_NOARGS,
      PendingCall_block__doc__},
-    {"cancel", (PyCFunction)PendingCall_cancel, METH_NOARGS,
+    {"cancel", (PyCFunction) (void (*)(void))PendingCall_cancel, METH_NOARGS,
      PendingCall_cancel__doc__},
-    {"get_completed", (PyCFunction)PendingCall_get_completed, METH_NOARGS,
+    {"get_completed", (PyCFunction) (void (*)(void))PendingCall_get_completed, METH_NOARGS,
      PendingCall_get_completed__doc__},
     {NULL, NULL, 0, NULL}
 };

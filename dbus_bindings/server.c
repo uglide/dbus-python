@@ -535,7 +535,7 @@ Server_get_is_connected (Server *self, PyObject *args UNUSED)
 /* Server type object =============================================== */
 
 struct PyMethodDef DBusPyServer_tp_methods[] = {
-#define ENTRY(name, flags) {#name, (PyCFunction)Server_##name, flags, Server_##name##__doc__}
+#define ENTRY(name, flags) {#name, (PyCFunction) (void (*)(void))Server_##name, flags, Server_##name##__doc__}
     ENTRY(disconnect,       METH_NOARGS),
     ENTRY(get_address,      METH_NOARGS),
     ENTRY(get_id,           METH_NOARGS),

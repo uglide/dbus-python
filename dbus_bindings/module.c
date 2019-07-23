@@ -220,7 +220,7 @@ set_default_main_loop(PyObject *always_null UNUSED,
 }
 
 static PyMethodDef module_functions[] = {
-#define ENTRY(name,flags) {#name, (PyCFunction)name, flags, name##__doc__}
+#define ENTRY(name,flags) {#name, (PyCFunction) (void (*)(void))name, flags, name##__doc__}
     ENTRY(validate_interface_name, METH_VARARGS),
     ENTRY(validate_member_name, METH_VARARGS),
     ENTRY(validate_bus_name, METH_VARARGS|METH_KEYWORDS),
