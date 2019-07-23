@@ -14,7 +14,6 @@ EXTRA_DIST = \
 	.travis.yml \
 	AUTHORS \
 	COPYING \
-	ChangeLog \
 	dbus-python.pc.in \
 	doc/_static/.gitignore \
 	examples/example-async-client.py \
@@ -357,9 +356,7 @@ $(patsubst %,%.test,$(test_programs)): %.test: Makefile
 
 # === Documentation ===
 
-@GENERATE_CHANGELOG_RULES@
-
-dist-hook: dist-ChangeLog
+dist-hook:
 	echo $(VERSION) > $(distdir)/.version
 	touch $(distdir)/MANIFEST
 	touch $(distdir)/MANIFEST.in

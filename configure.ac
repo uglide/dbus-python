@@ -34,7 +34,7 @@ AC_CONFIG_SRCDIR([dbus_bindings/module.c])
 AC_CONFIG_HEADERS(config.h)
 AC_USE_SYSTEM_EXTENSIONS
 
-AM_INIT_AUTOMAKE([1.13 -Wno-portability subdir-objects tar-ustar])
+AM_INIT_AUTOMAKE([1.13 -Wno-portability foreign subdir-objects tar-ustar])
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
@@ -96,8 +96,6 @@ AC_ARG_ENABLE([installed-tests],
 AM_CONDITIONAL([ENABLE_INSTALLED_TESTS], [test "_$enable_installed_tests" = _yes])
 
 dnl Building documentation
-
-AX_GENERATE_CHANGELOG
 
 AC_ARG_ENABLE([documentation],
   [AC_HELP_STRING([--enable-documentation],
