@@ -50,7 +50,7 @@ if [ -n "$ci_docker" ]; then
 		tools/ci-build.sh
 fi
 
-if [ -n "$TRAVIS" ] && [ -n "$dbus_ci_system_python" ]; then
+if [ -n "$dbus_ci_system_python" ]; then
 	# Reset to standard paths to use the Ubuntu version of python
 	unset LDFLAGS
 	unset PYTHONPATH
@@ -67,7 +67,7 @@ if [ -n "$TRAVIS" ] && [ -n "$dbus_ci_system_python" ]; then
 			# AX_PYTHON_DEVEL the information it needs to know
 			# that it should link -lpython2.7_d and not
 			# -lpython2.7.
-			export PYTHON_LIBS="-lpython${TRAVIS_PYTHON_VERSION}_d"
+			export PYTHON_LIBS="-lpython2.7_d"
 			;;
 	esac
 
