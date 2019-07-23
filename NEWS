@@ -3,18 +3,49 @@ D-Bus Python Bindings 1.2.10 (UNRELEASED)
 
 Dependencies:
 
-• dbus 1.8 was already required, but is now more strongly required,
-  and the remaining workarounds used to test on Ubuntu 14.04 'trusty'
-  have been removed.
+• dbus 1.8 was already required, but is more strongly required now:
+  the workarounds that were used to run continuous integration with dbus
+  1.6 on Ubuntu 14.04 'trusty' have been removed. (Note that dbus 1.8
+  has already reached end-of-life for security support, and newer dbus
+  stable branches are strongly recommended.)
+
 • When using Python 3, version 3.5 or later is strongly recommended.
   Python 3.4 security support ended in March 2019. No specific
   incompatibilities are known, but using dbus-python on Python 3.4 is
   no longer tested or supported.
 
+Enhancements:
+
+• Rewrite CONTRIBUTING.md document, based on Wayland's equivalent
+  (Simon McVittie, with thanks to Ander Conselvan de Oliveira,
+  Bryce Harrington, Eric Engestrom, Pekka Paalanen and Daniel Stone
+  for their contributions to the equivalent file in Wayland)
+
+• A generated ChangeLog file is no longer included in source tarballs.
+  Please refer to the git repository at
+  https://gitlab.freedesktop.org/dbus/dbus-python for detailed change
+  history. (Simon McVittie)
+
+• Improve continuous integration to be run by GitLab in addition to
+  Travis-CI (Simon McVittie)
+
+• Add clearer license information using SPDX-License-Identifier
+  (Simon McVittie)
+
 Fixes:
 
+• Don't set deprecated tp_print to NULL under Python 3, fixing build
+  warnings with Python 3.8 pre-releases (Simon McVittie)
+
+• Silence -Wcast-function-type with gcc 8 (Simon McVittie)
+
+• Fix distcheck with python3.7 by deleting __pycache__ during uninstall
+  (Simon McVittie)
+
 • Avoid a long-standing race condition in the automated tests
-  (Debian #898158)
+  (Debian #898158; Simon McVittie)
+
+• Fix Qt website URL (Ralf Habacker)
 
 D-Bus Python Bindings 1.2.8 (2018-05-04)
 ========================================
