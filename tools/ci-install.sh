@@ -113,6 +113,7 @@ case "$ci_distro" in
         if [ -n "${dbus_ci_system_python-}" ]; then
               sudo apt-get -qq -y install \
                 ${dbus_ci_system_python} \
+                ${dbus_ci_system_python%-dbg}-dev \
                 ${dbus_ci_system_python%-dbg}-docutils \
                 ${dbus_ci_system_python%-dbg}-gi \
                 ${dbus_ci_system_python%-dbg}-pip \
