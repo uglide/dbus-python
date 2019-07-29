@@ -1,7 +1,7 @@
 doc/API_CHANGES.html ../API_CHANGES.html
 doc/API_CHANGES.txt "See ../API_CHANGES.html"
-doc/HACKING.html ../HACKING.html
-doc/HACKING.txt "See ../HACKING.html"
+doc/HACKING.html https://gitlab.freedesktop.org/dbus/dbus-python/blob/master/CONTRIBUTING.md
+doc/HACKING.txt "See https://gitlab.freedesktop.org/dbus/dbus-python/blob/master/CONTRIBUTING.md"
 doc/PY3PORT.html ../PY3PORT.html
 doc/PY3PORT.txt "See ../PY3PORT.html"
 doc/tutorial.html ../tutorial.html
@@ -136,3 +136,5 @@ api/toc-dbus.types-module.html ../dbus.types.html
 api/toc-dbus._version-module.html ../dbus.html
 api/toc-everything.html ../dbus.html
 api/toc.html ../dbus.html
+HACKING.html https://gitlab.freedesktop.org/dbus/dbus-python/blob/master/CONTRIBUTING.md
+HACKING.txt "See https://gitlab.freedesktop.org/dbus/dbus-python/blob/master/CONTRIBUTING.md"

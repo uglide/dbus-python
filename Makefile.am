@@ -13,6 +13,7 @@ CLEANFILES = \
 EXTRA_DIST = \
 	.travis.yml \
 	AUTHORS \
+	CONTRIBUTING.md \
 	COPYING \
 	dbus-python.pc.in \
 	doc/_static/.gitignore \
@@ -390,7 +391,6 @@ sphinx_sources = \
 	doc/dbus.server.rst \
 	doc/dbus.service.rst \
 	doc/dbus.types.rst \
-	doc/HACKING.txt \
 	doc/index.rst \
 	doc/news.rst \
 	doc/PY3PORT.txt \

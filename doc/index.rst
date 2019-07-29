@@ -42,8 +42,14 @@ Documentation
     dbus
     PY3PORT
     news
-    HACKING
     API_CHANGES
+
+Contributing to dbus-python
+===========================
+
+Please see `the Gitlab project`_.
+
+.. _the Gitlab project: https://gitlab.freedesktop.org/dbus/dbus-python/blob/master/CONTRIBUTING.md
 
 Indices and tables
 ==================
