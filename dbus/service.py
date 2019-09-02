@@ -267,7 +267,8 @@ def _method_reply_return(connection, message, method_name, signature, *retval):
                       '%s: %s', retval, signature, e.__class__, e)
         raise
 
-    connection.send_message(reply)
+    if not message.get_no_reply():
+        connection.send_message(reply)
 
 
 def _method_reply_error(connection, message, exception):
@@ -295,7 +296,8 @@ def _method_reply_error(connection, message, exception):
             exception))
     reply = ErrorMessage(message, name, contents)
 
-    connection.send_message(reply)
+    if not message.get_no_reply():
+        connection.send_message(reply)
 
 
 class InterfaceType(type):
