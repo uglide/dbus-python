@@ -211,8 +211,8 @@ static struct PyMemberDef UnixFd_tp_members[] = {
      READONLY,
     "Indicates how many nested Variant containers this object\n"
     "is contained in: if a message's wire format has a variant containing a\n"
-    "variant containing an array, this is represented in Python by an\n"
-    "Array with variant_level==2.\n"
+    "variant containing a file descriptor, this is represented in Python by\n"
+    "a UnixFd with variant_level==2.\n"
     },
     {NULL},
 };
