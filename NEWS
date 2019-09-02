@@ -63,6 +63,9 @@ Fixes:
 • Fix distcheck with python3.7 by deleting __pycache__ during uninstall
   (Simon McVittie)
 
+• Consistently save and restore the exception indicator when called
+  from C code (Simon McVittie)
+
 • Avoid a long-standing race condition in the automated tests
   (Debian #898158; Simon McVittie)
 
