@@ -41,6 +41,7 @@ except ImportError:
 import dbus
 import _dbus_bindings
 import dbus.glib
+import dbus.lowlevel
 import dbus.service
 
 from dbus._compat import is_py2, is_py3
@@ -82,6 +83,11 @@ test_types_vals = [1, 12323231, 3.14159265, 99999999.99,
 NAME = "org.freedesktop.DBus.TestSuitePythonService"
 IFACE = "org.freedesktop.DBus.TestSuiteInterface"
 OBJECT = "/org/freedesktop/DBus/TestSuitePythonObject"
+
+# A random string that we should not transmit on the bus as a result of
+# the NO_REPLY flag
+SHOULD_NOT_HAPPEN = u'a1c04a41-cf98-4923-8487-ddaeeb3f02d1'
+
 
 class TestDBusBindings(unittest.TestCase):
     def setUp(self):
@@ -198,6 +204,56 @@ class TestDBusBindings(unittest.TestCase):
         print(b)
         print("Delta: %f" % (b - a))
         self.assertTrue(True)
+
+    def testNoReply(self):
+        failures = []
+        report = []
+        main_loop = gobject.MainLoop()
+
+        def message_filter(conn, m):
+            print('Message filter received message: %r, %r' % (m, m.get_args_list()))
+
+            if conn is not self.bus:
+                failures.append('Message filter called on unexpected bus')
+
+            for a in m.get_args_list():
+                if isinstance(a, unicode):
+                    if SHOULD_NOT_HAPPEN in a:
+                        failures.append('Had an unexpected reply')
+                    elif a == 'TestNoReply report':
+                        report.extend(m.get_args_list())
+                        main_loop.quit()
+
+            return dbus.lowlevel.HANDLER_RESULT_NOT_YET_HANDLED
+
+        self.bus.add_message_filter(message_filter)
+
+        message = dbus.lowlevel.MethodCallMessage(NAME, OBJECT, IFACE, 'TestNoReply')
+        message.append(True)
+        message.append(False)
+        message.set_no_reply(True)
+        self.bus.send_message(message)
+
+        message = dbus.lowlevel.MethodCallMessage(NAME, OBJECT, IFACE, 'TestNoReply')
+        message.append(False)
+        message.append(False)
+        message.set_no_reply(True)
+        self.bus.send_message(message)
+
+        message = dbus.lowlevel.MethodCallMessage(NAME, OBJECT, IFACE, 'TestNoReply')
+        message.append(True)
+        message.append(True)
+        self.bus.send_message(message)
+
+        main_loop.run()
+        self.bus.remove_message_filter(message_filter)
+
+        if failures:
+            self.assertTrue(False, failures)
+
+        self.assertEqual(report[0], 'TestNoReply report')
+        self.assertEqual(report[1], 1)
+        self.assertEqual(report[2], 1)
 
     def testAsyncCalls(self):
         #test sending python types and getting them back async

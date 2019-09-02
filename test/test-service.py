@@ -69,6 +69,11 @@ NAME = "org.freedesktop.DBus.TestSuitePythonService"
 IFACE = "org.freedesktop.DBus.TestSuiteInterface"
 OBJECT = "/org/freedesktop/DBus/TestSuitePythonObject"
 
+# A random string that we should not transmit on the bus as a result of
+# the NO_REPLY flag
+SHOULD_NOT_HAPPEN = 'a1c04a41-cf98-4923-8487-ddaeeb3f02d1'
+
+
 class RemovableObject(dbus.service.Object):
     # Part of test for https://bugs.freedesktop.org/show_bug.cgi?id=10457
     @dbus.service.method(IFACE, in_signature='', out_signature='b')
@@ -144,6 +149,8 @@ class TestObject(dbus.service.Object, TestInterface):
                                       object_path + '/Multi2')
         self._multi.add_to_connection(bus_name.get_bus(),
                                       object_path + '/Multi2/3')
+        self._times_no_reply_succeeded = 0
+        self._times_no_reply_failed = 0
 
     """ Echo whatever is sent
     """
@@ -340,6 +347,23 @@ class TestObject(dbus.service.Object, TestInterface):
     @dbus.service.method(IFACE, in_signature='', out_signature='')
     def RaiseValueError(self):
         raise ValueError('Wrong!')
+
+    @dbus.service.method(IFACE, in_signature='bb', out_signature='sii')
+    def TestNoReply(self, succeed, report):
+        """Callers are meant to call this with the NO_REPLY flag,
+        unless they call it with report=true."""
+
+        if report:
+            return ('TestNoReply report',
+                    self._times_no_reply_succeeded,
+                    self._times_no_reply_failed)
+
+        if succeed:
+            self._times_no_reply_succeeded += 1
+            return (SHOULD_NOT_HAPPEN, 0, 0)
+        else:
+            self._times_no_reply_failed += 1
+            raise ValueError(SHOULD_NOT_HAPPEN)
 
     @dbus.service.method(IFACE, in_signature='', out_signature='')
     def RaiseDBusExceptionNoTraceback(self):
