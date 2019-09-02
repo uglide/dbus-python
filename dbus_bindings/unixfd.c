@@ -28,6 +28,9 @@
 
 #include "dbus_bindings-internal.h"
 
+#include <Python.h>
+#include <structmember.h>
+
 #include "types-internal.h"
 
 PyDoc_STRVAR(UnixFd_tp_doc,
@@ -55,6 +58,7 @@ PyDoc_STRVAR(UnixFd_tp_doc,
 typedef struct {
     PyObject_HEAD
     int fd;
+    long variant_level;
 } UnixFdObject;
 
 /* Return values:
@@ -94,13 +98,16 @@ make_fd(PyObject *arg, int *fd)
 }
 
 static PyObject *
-UnixFd_tp_new(PyTypeObject *cls, PyObject *args, PyObject *kwargs UNUSED)
+UnixFd_tp_new(PyTypeObject *cls, PyObject *args, PyObject *kwargs)
 {
     UnixFdObject *self = NULL;
     PyObject *arg;
     int status, fd, fd_original = -1;
 
-    if (!PyArg_ParseTuple(args, "O", &arg, NULL)) {
+    static char *argnames[] = {"fd", "variant_level", NULL};
+    long variant_level = 0;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O|l", argnames, &arg, &variant_level)) {
         return NULL;
     }
 
@@ -142,6 +149,12 @@ UnixFd_tp_new(PyTypeObject *cls, PyObject *args, PyObject *kwargs UNUSED)
         return NULL;
 
     self->fd = fd;
+    if (variant_level < 0) {
+        PyErr_Format(PyExc_ValueError, "variant_level cannot be less than 0");
+        return NULL;
+    }
+    self->variant_level = variant_level;
+
     return (PyObject *)self;
 }
 
@@ -193,6 +206,17 @@ static PyMethodDef UnixFd_methods[] = {
     {NULL}
 };
 
+static struct PyMemberDef UnixFd_tp_members[] = {
+    {"variant_level", T_LONG, offsetof(UnixFdObject, variant_level),
+     READONLY,
+    "Indicates how many nested Variant containers this object\n"
+    "is contained in: if a message's wire format has a variant containing a\n"
+    "variant containing an array, this is represented in Python by an\n"
+    "Array with variant_level==2.\n"
+    },
+    {NULL},
+};
+
 PyTypeObject DBusPyUnixFd_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     "dbus.UnixFd",
@@ -222,7 +246,7 @@ PyTypeObject DBusPyUnixFd_Type = {
     0,                                      /* tp_iter */
     0,                                      /* tp_iternext */
     UnixFd_methods,                         /* tp_methods */
-    0,                                      /* tp_members */
+    UnixFd_tp_members,                      /* tp_members */
     0,                                      /* tp_getset */
     0,                                      /* tp_base */
     0,                                      /* tp_dict */
