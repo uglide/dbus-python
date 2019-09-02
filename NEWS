@@ -1,6 +1,12 @@
 D-Bus Python Bindings 1.2.10 (UNRELEASED)
 =========================================
 
+dbus-python version control is now hosted on freedesktop.org's Gitlab
+installation, and bug reports and feature requests have switched from
+Bugzilla bugs (indicated by "fd.o #nnn") to Gitlab issues
+("dbus-python#nnn") and merge requests ("dbus-python!nnn"). See README
+and CONTRIBUTING.md for more details.
+
 Dependencies:
 
 • dbus 1.8 was already required, but is more strongly required now:
@@ -32,10 +38,22 @@ Enhancements:
 • Add clearer license information using SPDX-License-Identifier
   (Simon McVittie)
 
+• Improve test coverage (Simon McVittie)
+
 Fixes:
 
 • Don't set deprecated tp_print to NULL under Python 3, fixing build
   warnings with Python 3.8 pre-releases (Simon McVittie)
+
+• Include inherited methods and properties when documenting objects,
+  which regressed when migrating from epydoc to sphinx
+  (Simon McVittie)
+
+• Add missing variant_level member to UnixFd type, for parity with the
+  other dbus.types types (dbus-python!3; John Baublitz)
+
+• Don't reply to method calls if they have the NO_REPLY_EXPECTED flag
+  (fd.o#32529, dbus-python#26; Simon McVittie)
 
 • Silence -Wcast-function-type with gcc 8 (Simon McVittie)
 
