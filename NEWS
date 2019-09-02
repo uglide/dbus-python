@@ -52,6 +52,9 @@ Fixes:
 • Add missing variant_level member to UnixFd type, for parity with the
   other dbus.types types (dbus-python!3; John Baublitz)
 
+    - Note that this is a potentially incompatible change: unknown
+      keyword arguments were previously ignored (!) and are now an error.
+
 • Don't reply to method calls if they have the NO_REPLY_EXPECTED flag
   (fd.o#32529, dbus-python#26; Simon McVittie)
 
