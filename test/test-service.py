@@ -151,6 +151,14 @@ class TestObject(dbus.service.Object, TestInterface):
     def Echo(self, arg):
         return arg
 
+    @dbus.service.method(IFACE, in_signature='v', out_signature='v')
+    def EchoVariant(self, arg):
+        return arg
+
+    @dbus.service.method(IFACE, in_signature='h', out_signature='h')
+    def EchoFd(self, arg):
+        return arg
+
     @dbus.service.method(IFACE, in_signature='s', out_signature='s')
     def AcceptUnicodeString(self, foo):
         unicode_type = (str if is_py3 else unicode)

@@ -29,10 +29,12 @@
 import os
 import unittest
 import logging
+import sys
 
 import dbus
 import dbus.glib
 import dbus.service
+import dbus.types
 
 from dbus._compat import is_py2
 
@@ -82,6 +84,29 @@ class TestDBusBindings(unittest.TestCase):
         conn, unique = self.get_conn_and_unique()
         ret = conn.call_blocking(NAME, OBJECT, IFACE, 'Echo', 'v', ('V',))
         self.assertEqual(ret, 'V')
+        self.assertEqual(ret.variant_level, 1)
+
+    @unittest.skipIf(sys.platform.startswith("win"), "requires Unix")
+    def testUnixFd(self):
+        with open('/dev/null', 'r') as file_like:
+            for method in 'Echo', 'EchoVariant', 'EchoFd':
+                if method == 'EchoFd':
+                    sig = 'h'
+                else:
+                    sig = 'v'
+
+                conn, unique = self.get_conn_and_unique()
+                ret = conn.call_blocking(NAME, OBJECT, IFACE, method, sig, (dbus.types.UnixFd(file_like),))
+                self.assertEqual(type(ret), dbus.types.UnixFd)
+
+                if method == 'EchoFd':
+                    self.assertEqual(ret.variant_level, 0)
+                elif method == 'EchoVariant':
+                    self.assertEqual(ret.variant_level, 1)
+
+                plain_fd = ret.take()
+                self.assertTrue(os.path.sameopenfile(file_like.fileno(), plain_fd))
+                os.close(plain_fd)
 
     def testCallThroughProxy(self):
         conn, unique = self.get_conn_and_unique()
