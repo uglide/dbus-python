@@ -270,7 +270,7 @@ void _dbus_py_dbg_dump_message(DBusMessage *);
 #   define TRACE(self) do { \
     fprintf(stderr, "TRACE: <%s at %p> in %s, "                 \
             "%d refs\n",                                        \
-            self ? Py_TYPE(self)->tp_name : NULL,               \
+            self ? Py_TYPE(self)->tp_name : "(null)",           \
             self, __func__,                                     \
             self ? (int)Py_REFCNT(self) : 0);                   \
     } while (0)
