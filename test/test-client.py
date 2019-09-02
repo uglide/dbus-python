@@ -209,6 +209,7 @@ class TestDBusBindings(unittest.TestCase):
         failures = []
         report = []
         main_loop = gobject.MainLoop()
+        unicode_type = (str if is_py3 else unicode)
 
         def message_filter(conn, m):
             print('Message filter received message: %r, %r' % (m, m.get_args_list()))
@@ -217,7 +218,7 @@ class TestDBusBindings(unittest.TestCase):
                 failures.append('Message filter called on unexpected bus')
 
             for a in m.get_args_list():
-                if isinstance(a, unicode):
+                if isinstance(a, unicode_type):
                     if SHOULD_NOT_HAPPEN in a:
                         failures.append('Had an unexpected reply')
                     elif a == 'TestNoReply report':
