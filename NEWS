@@ -1,5 +1,7 @@
-D-Bus Python Bindings 1.2.10 (UNRELEASED)
+D-Bus Python Bindings 1.2.10 (2019-09-02)
 =========================================
+
+The “wingèd horse” release.
 
 dbus-python version control is now hosted on freedesktop.org's Gitlab
 installation, and bug reports and feature requests have switched from
