@@ -513,6 +513,37 @@ class TestMessageMarshalling(unittest.TestCase):
             else:
                 pass  # libdbus >= 1.6.10 allows noncharacters
 
+    @unittest.skipIf(sys.platform.startswith("win"), "requires Unix")
+    def test_unix_fd(self):
+        plain_fd = os.open('/dev/null', os.O_RDONLY)
+
+        try:
+            with open('/dev/null', 'r') as file_like_object:
+                fd = types.UnixFd(plain_fd)
+                self.assertEqual(fd.variant_level, 0)
+                other = fd.take()
+                os.close(other)
+
+                with self.assertRaises(ValueError):
+                    fd.take()
+
+                fd = types.UnixFd(plain_fd, variant_level=42)
+                self.assertEqual(fd.variant_level, 42)
+
+                fd = types.UnixFd(file_like_object)
+                self.assertEqual(fd.variant_level, 0)
+
+                fd = types.UnixFd(file_like_object, variant_level=42)
+                self.assertEqual(fd.variant_level, 42)
+
+                with self.assertRaises(TypeError):
+                    types.UnixFd(plain_fd, invalid_kwarg='nope')
+
+                with self.assertRaises(TypeError):
+                    types.UnixFd(plain_fd, variant_level='nope')
+        finally:
+            os.close(plain_fd)
+
 class TestMatching(unittest.TestCase):
     def setUp(self):
         from _dbus_bindings import SignalMessage
