@@ -163,6 +163,27 @@ so you should have an issue number or a merge request ID to refer to.
 
 ### Making a release
 
-The release process is not currently documented.
+#### Pre-release steps
 
-Remember to upload each new source release to PyPI.
+* Make sure CI (currently Travis-CI and Gitlab) is passing
+* Update `NEWS` and the version number in `configure.ac`, and commit them
+
+#### Building and uploading the release
+
+If `${builddir}` is the path to a build directory and `${version}`
+is the new version:
+
+```
+make -C ${builddir} distcheck
+# do any final testing here, e.g. updating the Debian package
+git tag -m dbus-python-${version} -s dbus-python-${version}
+gpg --detach-sign -a ${builddir}/dbus-python-${version}.tar.gz
+make -C ${builddir} maintainer-upload
+make -C ${builddir} maintainer-update-website
+twine upload ${builddir}/dbus-python-${version}.tar.gz{,.asc}
+```
+
+#### Post-release steps
+
+* Announce the new release to the D-Bus mailing list
+* Update `NEWS` and the version number in `configure.ac`, and commit them
