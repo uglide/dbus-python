@@ -190,11 +190,8 @@ DBusPyServer_new_connection_cb(DBusServer *server,
                                void *data UNUSED)
 {
     PyGILState_STATE gil = PyGILState_Ensure();
-    PyObject *et, *ev, *tb;
     PyObject *self = NULL;
     PyObject *method = NULL;
-
-    PyErr_Fetch(&et, &ev, &tb);
 
     self = DBusPyServer_ExistingFromDBusServer(server);
     if (!self) goto out;
@@ -227,12 +224,12 @@ DBusPyServer_new_connection_cb(DBusServer *server,
     }
 
 out:
-    if (PyErr_Occurred())
-        PyErr_WriteUnraisable(method);
-
-    Py_CLEAR(self);
     Py_CLEAR(method);
-    PyErr_Restore(et, ev, tb);
+    Py_CLEAR(self);
+
+    if (PyErr_Occurred())
+        PyErr_Print();
+
     PyGILState_Release(gil);
 }
 

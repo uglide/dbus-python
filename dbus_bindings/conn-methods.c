@@ -34,12 +34,9 @@ static void
 _object_path_unregister(DBusConnection *conn, void *user_data)
 {
     PyGILState_STATE gil = PyGILState_Ensure();
-    PyObject *et, *ev, *tb;
     PyObject *tuple = NULL;
     Connection *conn_obj = NULL;
-    PyObject *callable = NULL;
-
-    PyErr_Fetch(&et, &ev, &tb);
+    PyObject *callable;
 
     conn_obj = (Connection *)DBusPyConnection_ExistingFromDBusConnection(conn);
     if (!conn_obj) goto out;
@@ -62,15 +59,13 @@ _object_path_unregister(DBusConnection *conn, void *user_data)
         Py_XDECREF(PyObject_CallFunctionObjArgs(callable, conn_obj, NULL));
     }
 out:
-    if (PyErr_Occurred()) {
-        PyErr_WriteUnraisable(callable);
-    }
-
     Py_CLEAR(conn_obj);
     Py_CLEAR(tuple);
     /* the user_data (a Python str) is no longer ref'd by the DBusConnection */
     Py_CLEAR(user_data);
-    PyErr_Restore(et, ev, tb);
+    if (PyErr_Occurred()) {
+        PyErr_Print();
+    }
     PyGILState_Release(gil);
 }
 
@@ -80,13 +75,10 @@ _object_path_message(DBusConnection *conn, DBusMessage *message,
 {
     DBusHandlerResult ret;
     PyGILState_STATE gil = PyGILState_Ensure();
-    PyObject *et, *ev, *tb;
     Connection *conn_obj = NULL;
     PyObject *tuple = NULL;
     PyObject *msg_obj;
-    PyObject *callable = NULL;      /* borrowed */
-
-    PyErr_Fetch(&et, &ev, &tb);
+    PyObject *callable;             /* borrowed */
 
     dbus_message_ref(message);
     msg_obj = DBusPyMessage_ConsumeDBusMessage(message);
@@ -131,14 +123,12 @@ _object_path_message(DBusConnection *conn, DBusMessage *message,
     }
 
 out:
-    if (PyErr_Occurred()) {
-        PyErr_WriteUnraisable(callable);
-    }
-
     Py_CLEAR(msg_obj);
     Py_CLEAR(conn_obj);
     Py_CLEAR(tuple);
-    PyErr_Restore(et, ev, tb);
+    if (PyErr_Occurred()) {
+        PyErr_Print();
+    }
     PyGILState_Release(gil);
     return ret;
 }
@@ -153,15 +143,12 @@ _filter_message(DBusConnection *conn, DBusMessage *message, void *user_data)
 {
     DBusHandlerResult ret;
     PyGILState_STATE gil = PyGILState_Ensure();
-    PyObject *et, *ev, *tb;
     Connection *conn_obj = NULL;
     PyObject *callable = NULL;
     PyObject *msg_obj;
 #ifndef DBUS_PYTHON_DISABLE_CHECKS
     Py_ssize_t i, size;
 #endif
-
-    PyErr_Fetch(&et, &ev, &tb);
 
     dbus_message_ref(message);
     msg_obj = DBusPyMessage_ConsumeDBusMessage(message);
@@ -214,14 +201,9 @@ _filter_message(DBusConnection *conn, DBusMessage *message, void *user_data)
 
     ret = DBusPyConnection_HandleMessage(conn_obj, msg_obj, callable);
 out:
-    if (PyErr_Occurred()) {
-        PyErr_WriteUnraisable(callable);
-    }
-
     Py_CLEAR(msg_obj);
     Py_CLEAR(conn_obj);
     Py_CLEAR(callable);
-    PyErr_Restore(et, ev, tb);
     PyGILState_Release(gil);
     return ret;
 }

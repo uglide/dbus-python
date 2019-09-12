@@ -79,20 +79,15 @@ _pending_call_notify_function(DBusPendingCall *pc,
                               PyObject *list)
 {
     PyGILState_STATE gil = PyGILState_Ensure();
-    PyObject *et, *ev, *tb;
-    PyObject *handler;
-    DBusMessage *msg;
-
-    PyErr_Fetch(&et, &ev, &tb);
-
     /* BEGIN CRITICAL SECTION
      * While holding the GIL, make sure the callback only gets called once
      * by deleting it from the 1-item list that's held by libdbus.
      */
-    handler = PyList_GetItem(list, 0);
+    PyObject *handler = PyList_GetItem(list, 0);
+    DBusMessage *msg;
 
     if (!handler) {
-        PyErr_WriteUnraisable(list);
+        PyErr_Print();
         goto release;
     }
     if (handler == Py_None) {
@@ -118,7 +113,7 @@ _pending_call_notify_function(DBusPendingCall *pc,
             PyObject *ret = PyObject_CallFunctionObjArgs(handler, msg_obj, NULL);
 
             if (!ret) {
-                PyErr_WriteUnraisable(handler);
+                PyErr_Print();
             }
             Py_CLEAR(ret);
             Py_CLEAR(msg_obj);
@@ -129,7 +124,6 @@ _pending_call_notify_function(DBusPendingCall *pc,
 
 release:
     Py_CLEAR(handler);
-    PyErr_Restore(et, ev, tb);
     PyGILState_Release(gil);
 }
 
