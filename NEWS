@@ -1,7 +1,16 @@
-dbus Python Bindings 1.2.12 (UNRELEASED)
+dbus Python Bindings 1.2.12 (2019-09-12)
 ========================================
 
-...
+The “spinal bap” release.
+
+Fixes:
+
+• Don't save and restore the exception indicator when called from C code.
+  This avoided "returned a result with an error set" errors under some
+  circumstances, but also caused a regression for code that relies on
+  being able to terminate the program by calling sys.exit() or raising
+  SystemExit from a dbus-python method. In particular, this broke one of
+  libsecret's unit tests. (Debian #940087; Simon McVittie)
 
 D-Bus Python Bindings 1.2.10 (2019-09-02)
 =========================================
