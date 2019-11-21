@@ -133,6 +133,7 @@ AX_COMPILER_FLAGS([WARN_CFLAGS],
   [ \
    -Wdeprecated-declarations \
    -Wno-duplicated-branches \
+   -Wno-inline \
    -Wno-redundant-decls \
    -Wno-switch-default \
    -Wno-write-strings \
@@ -141,6 +142,7 @@ dnl AX_COMPILER_FLAGS doesn't order the compiler flags correctly to be able
 dnl to disable flags that it would normally enable
 WARN_CFLAGS="$(echo "${WARN_CFLAGS}" | ${SED} \
   -e s/-Wduplicated-branches// \
+  -e s/-Winline// \
   -e s/-Wredundant-decls// \
   -e s/-Wswitch-default// \
   -e s/-Wwrite-strings// \
