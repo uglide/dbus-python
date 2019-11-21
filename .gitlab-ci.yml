@@ -77,4 +77,22 @@ build:python3.7-dbg:
     dbus_ci_system_python: python3-dbg
   script: *script
 
+build:python3.8:
+  stage: build
+  image: "debian:sid-slim"
+  variables:
+    ci_suite: sid
+    dbus_ci_system_python: python3.8
+  script: *script
+
+build:python3.8-dbg:
+  stage: build
+  image: "debian:sid-slim"
+  variables:
+    ci_suite: sid
+    dbus_ci_system_python: python3.8-dbg
+    dbus_ci_system_python_module_prefix: python3-
+    dbus_ci_system_python_module_suffix: -dbg
+  script: *script
+
 # vim:set sw=2 sts=2 et:

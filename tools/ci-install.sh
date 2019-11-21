@@ -75,6 +75,30 @@ if [ -n "$ci_docker" ]; then
     exec docker build -t ci-image .
 fi
 
+if [ -n "${dbus_ci_system_python-}" ]; then
+    if [ -z "${dbus_ci_system_python_module_prefix-}" ]; then
+        case "$dbus_ci_system_python}" in
+            (python3*)
+                dbus_ci_system_python_module_prefix=python3-
+                ;;
+            (*)
+                dbus_ci_system_python_module_prefix=python-
+                ;;
+        esac
+    fi
+
+    if [ -z "${dbus_ci_system_python_module_suffix-}" ]; then
+        case "$dbus_ci_system_python}" in
+            (*-dbg)
+                dbus_ci_system_python_module_suffix=-dbg
+                ;;
+            (*)
+                dbus_ci_system_python_module_suffix=
+                ;;
+        esac
+    fi
+fi
+
 case "$ci_distro" in
     (debian|ubuntu)
         # Don't ask questions, just do it
@@ -114,15 +138,11 @@ case "$ci_distro" in
               sudo apt-get -qq -y install \
                 ${dbus_ci_system_python} \
                 ${dbus_ci_system_python%-dbg}-dev \
-                ${dbus_ci_system_python%-dbg}-docutils \
-                ${dbus_ci_system_python%-dbg}-gi \
-                ${dbus_ci_system_python%-dbg}-pip \
-                ${dbus_ci_system_python%-dbg}-setuptools \
+                ${dbus_ci_system_python_module_prefix}docutils \
+                ${dbus_ci_system_python_module_prefix}gi${dbus_ci_system_python_module_suffix} \
+                ${dbus_ci_system_python_module_prefix}pip \
+                ${dbus_ci_system_python_module_prefix}setuptools \
                 ${NULL}
-
-                if [ "${dbus_ci_system_python%-dbg}" != "${dbus_ci_system_python}" ]; then
-                    sudo apt-get -qq -y install ${dbus_ci_system_python%-dbg}-gi-dbg
-                fi
 
             if [ "$dbus_ci_system_python" = python ]; then
                 sudo apt-get -qq -y install python-gobject-2
@@ -133,7 +153,7 @@ case "$ci_distro" in
                     ;;
 
                 (*)
-                    $sudo apt-get -qq -y install ${dbus_ci_system_python%-dbg}-tap
+                    $sudo apt-get -qq -y install ${dbus_ci_system_python_module_prefix}tap
                     have_system_tappy=yes
                     ;;
             esac
@@ -144,8 +164,8 @@ case "$ci_distro" in
 
                 (*)
                     $sudo apt-get -qq -y install \
-                        ${dbus_ci_system_python%-dbg}-sphinx \
-                        ${dbus_ci_system_python%-dbg}-sphinx-rtd-theme \
+                        ${dbus_ci_system_python_module_prefix}sphinx \
+                        ${dbus_ci_system_python_module_prefix}sphinx-rtd-theme \
                         ${NULL}
                     have_system_sphinx=yes
                     ;;

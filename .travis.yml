@@ -36,6 +36,7 @@ python:
   - "3.6"
   - "3.6-dev"
   - "3.7-dev"
+  - "3.8-dev"
   - "nightly"
 script:
   - PATH="/usr/lib/ccache:$PATH" ./tools/ci-build.sh
