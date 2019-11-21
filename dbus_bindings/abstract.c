@@ -287,6 +287,19 @@ PyTypeObject DBusPyIntBase_Type = {
 /* There's only one subclass at the moment (Double) but these are factored
 out to make room for Float later. (Float is implemented and #if'd out) */
 
+#ifdef PY3
+/* In Python >= 3.8 the tp_str for subclasses of built-in types prints
+ * the subclass repr(), which does not match dbus-python's historical
+ * behaviour. */
+static PyObject *
+DBusPythonFloat_tp_str(PyObject *self)
+{
+    return (PyFloat_Type.tp_repr)(self);
+}
+#else
+#define DBusPythonFloat_tp_str 0
+#endif
+
 PyDoc_STRVAR(DBusPythonFloat_tp_doc,\
 "Base class for float subclasses with a ``variant_level`` attribute.\n"
 "Do not rely on the existence of this class outside dbus-python.\n"
@@ -367,7 +380,7 @@ PyTypeObject DBusPyFloatBase_Type = {
     0,                                      /* tp_as_mapping */
     0,                                      /* tp_hash */
     0,                                      /* tp_call */
-    0,                                      /* tp_str */
+    DBusPythonFloat_tp_str,                 /* tp_str */
     0,                                      /* tp_getattro */
     0,                                      /* tp_setattro */
     0,                                      /* tp_as_buffer */
