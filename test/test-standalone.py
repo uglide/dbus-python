@@ -50,9 +50,13 @@ from dbus._compat import is_py2, is_py3
 if is_py3:
     def make_long(n):
         return n
+
+    UNICODE = str
 else:
     def make_long(n):
         return long(n)
+
+    UNICODE = unicode
 
 if 'DBUS_TEST_UNINSTALLED' in os.environ:
     builddir = os.path.normpath(os.environ["DBUS_TOP_BUILDDIR"])
@@ -110,6 +114,9 @@ class TestTypes(unittest.TestCase):
         self.assertEqual(types.Double(0.0), 0.0)
         self.assertEqual(types.Double(0.125, variant_level=2), 0.125)
         self.assertEqual(types.Double(0.125, variant_level=2).variant_level, 2)
+        self.assertEqual(str(types.Double(0.125)), '0.125')
+        self.assertEqual(float(types.Double(0.125)), 0.125)
+        self.assertIs(type(float(types.Double(0.125))), float)
 
     def test_Struct(self):
         x = types.Struct(('',))
@@ -126,6 +133,7 @@ class TestTypes(unittest.TestCase):
         self.assertEqual(types.Byte(make_long(1)), 1)
         self.assertRaises(Exception, lambda: types.Byte(b'ab'))
         self.assertRaises(TypeError, types.Byte, '\x12xxxxxxxxxxxxx')
+        self.assertEqual(str(types.Byte(b'x')), 'x')
 
         # Byte from a unicode object: what would that even mean?
         self.assertRaises(Exception,
@@ -154,6 +162,16 @@ class TestTypes(unittest.TestCase):
             self.assertEqual(cls(0), 0)
             self.assertEqual(cls(23, variant_level=1), 23)
             self.assertEqual(cls(23, variant_level=1).variant_level, 1)
+            self.assertEqual(int(cls(42)), 42)
+            self.assertIs(type(int(cls(42))), int)
+            self.assertEqual(str(cls(42)), '42')
+            self.assertIs(type(str(cls(42))), str)
+
+            if is_py2:
+                self.assertEqual(long(cls(42)), make_long(42))
+                self.assertIs(type(long(cls(42))), long)
+                self.assertEqual(unicode(cls(42)), '42'.decode('ascii'))
+                self.assertIs(type(unicode(cls(42))), unicode)
 
     def test_integer_limits_16(self):
         self.assertEqual(types.Int16(0x7fff), 0x7fff)
@@ -180,11 +198,11 @@ class TestTypes(unittest.TestCase):
                          make_long(-0x8000000000000000))
         self.assertEqual(types.UInt64(make_long(0xffffffffffffffff)), 
                          make_long(0xffffffffffffffff))
-        self.assertRaises(Exception, types.Int16, 
+        self.assertRaises(Exception, types.Int64,
                           make_long(0x8000000000000000))
-        self.assertRaises(Exception, types.Int16, 
+        self.assertRaises(Exception, types.Int64,
                           make_long(-0x8000000000000001))
-        self.assertRaises(Exception, types.UInt16, 
+        self.assertRaises(Exception, types.UInt64,
                           make_long(0x10000000000000000))
 
     def test_Signature(self):
@@ -195,6 +213,61 @@ class TestTypes(unittest.TestCase):
                          ('ab', '(xt)', 'a{sv}'))
         self.assertTrue(isinstance(tuple(types.Signature('ab'))[0],
                                    types.Signature))
+        self.assertEqual(str(types.Signature('ab')), 'ab')
+        self.assertIs(type(str(types.Signature('ab'))), str)
+
+        if is_py2:
+            self.assertEqual(str(types.Signature('ab')), 'ab')
+            self.assertIs(type(str(types.Signature('ab'))), str)
+            self.assertEqual(unicode(types.Signature('ab')), 'ab'.decode('ascii'))
+            self.assertIs(type(unicode(types.Signature('ab'))), unicode)
+
+    def test_string(self):
+        self.assertEqual(types.String('hello', variant_level=23), 'hello')
+        self.assertEqual(types.String('hello', variant_level=23).variant_level, 23)
+        self.assertTrue(isinstance(types.String('hello'), UNICODE))
+        self.assertEqual(str(types.String('hello')), 'hello')
+        self.assertIs(type(str(types.String('hello'))), str)
+
+        if is_py2:
+            self.assertEqual(unicode(types.String('hello')), 'hello'.decode('ascii'))
+            self.assertIs(type(unicode(types.String('hello'))), unicode)
+
+            self.assertEqual(types.UTF8String('hello', variant_level=23), 'hello')
+            self.assertEqual(types.UTF8String('hello', variant_level=23).variant_level, 23)
+            self.assertTrue(isinstance(types.UTF8String('hello'), str))
+            self.assertEqual(str(types.UTF8String('hello')), 'hello')
+            self.assertIs(type(str(types.UTF8String('hello'))), str)
+            self.assertEqual(unicode(types.UTF8String('hello')), 'hello'.decode('ascii'))
+            self.assertIs(type(unicode(types.UTF8String('hello'))), unicode)
+
+    def test_object_path(self):
+        self.assertRaises(Exception, types.ObjectPath, 'a')
+        self.assertEqual(types.ObjectPath('/ab', variant_level=23), '/ab')
+        self.assertEqual(types.ObjectPath('/ab', variant_level=23).variant_level, 23)
+        self.assertTrue(isinstance(types.ObjectPath('/ab'), str))
+        self.assertEqual(str(types.ObjectPath('/ab')), '/ab')
+        self.assertIs(type(str(types.ObjectPath('/ab'))), str)
+
+        if is_py2:
+            self.assertEqual(unicode(types.ObjectPath('/ab')), '/ab'.decode('ascii'))
+            self.assertIs(type(unicode(types.ObjectPath('/ab'))), unicode)
+
+    def test_boolean(self):
+        self.assertEqual(types.Boolean(True, variant_level=23), True)
+        self.assertEqual(types.Boolean(True, variant_level=23).variant_level, 23)
+        self.assertEqual(str(types.Boolean(False)), '0')
+        self.assertEqual(str(types.Boolean(True)), '1')
+        self.assertEqual(str(types.Boolean(47)), '1')
+        self.assertEqual(int(types.Boolean(False)), 0)
+        self.assertEqual(int(types.Boolean(True)), 1)
+        self.assertEqual(int(types.Boolean(47)), 1)
+        self.assertIs(type(int(types.Boolean(False))), int)
+        self.assertIs(type(int(types.Boolean(True))), int)
+
+        if is_py2:
+            self.assertEqual(unicode(types.Boolean(True)), '1'.decode('ascii'))
+            self.assertIs(type(unicode(types.Boolean(True))), unicode)
 
 
 class TestMessageMarshalling(unittest.TestCase):
@@ -535,6 +608,9 @@ class TestMessageMarshalling(unittest.TestCase):
 
                 fd = types.UnixFd(file_like_object, variant_level=42)
                 self.assertEqual(fd.variant_level, 42)
+
+                with self.assertRaises(TypeError):
+                    int(fd)
 
                 with self.assertRaises(TypeError):
                     types.UnixFd(plain_fd, invalid_kwarg='nope')
