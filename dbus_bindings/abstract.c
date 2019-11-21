@@ -713,6 +713,19 @@ DBusPythonLong_tp_repr(PyObject *self)
     return my_repr;
 }
 
+#ifdef PY3
+/* In Python >= 3.8 the tp_str for subclasses of built-in types prints
+ * the subclass repr(), which does not match dbus-python's historical
+ * behaviour. */
+static PyObject *
+DBusPythonLong_tp_str(PyObject *self)
+{
+    return (PyLong_Type.tp_repr)(self);
+}
+#else
+#define DBusPythonLong_tp_str 0
+#endif
+
 static void
 DBusPyLongBase_tp_dealloc(PyObject *self)
 {
@@ -736,7 +749,7 @@ PyTypeObject DBusPyLongBase_Type = {
     0,                                      /* tp_as_mapping */
     0,                                      /* tp_hash */
     0,                                      /* tp_call */
-    0,                                      /* tp_str */
+    DBusPythonLong_tp_str,                  /* tp_str */
     dbus_py_variant_level_getattro,         /* tp_getattro */
     dbus_py_immutable_setattro,             /* tp_setattro */
     0,                                      /* tp_as_buffer */
