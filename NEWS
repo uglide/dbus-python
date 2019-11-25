@@ -1,7 +1,18 @@
-dbus Python Bindings 1.2.14 (UNRELEASED)
+dbus Python Bindings 1.2.14 (2019-11-25)
 ========================================
 
-...
+The “don't stand in the fire” release.
+
+Fixes:
+
+• Ensure that the numeric types from dbus.types get the same str()
+  under Python 3.8 that they did under previous versions. Previously,
+  Python 3.8 used their repr() for the str(), which was not intended.
+  (dbus-python#31; matclab, Simon McVittie)
+
+• Disable -Winline (Simon McVittie)
+
+• Add Python 3.8 to CI (Simon McVittie)
 
 dbus Python Bindings 1.2.12 (2019-09-12)
 ========================================

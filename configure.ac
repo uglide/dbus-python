@@ -5,7 +5,7 @@ dnl The dbus-python version number
 m4_define(dbus_python_major_version, 1)
 m4_define(dbus_python_minor_version, 2)
 dnl Micro version is odd for non-releases
-m4_define(dbus_python_micro_version, 13)
+m4_define(dbus_python_micro_version, 14)
 
 AC_INIT([dbus-python],
   dbus_python_major_version.dbus_python_minor_version.dbus_python_micro_version,
