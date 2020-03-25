@@ -29,6 +29,7 @@
 
 #include <Python.h>
 #include <structmember.h>
+#include "config.h"
 
 PyDoc_STRVAR(module_doc,
 "Low-level Python bindings for libdbus. Don't use this module directly -\n"

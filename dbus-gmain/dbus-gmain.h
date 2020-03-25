@@ -34,7 +34,7 @@
 #include <glib.h>
 
 #ifndef DBUS_GMAIN_FUNCTION_NAME
-# define DBUS_GMAIN_FUNCTION_NAME(name) dbus_gmain_ ## name
+# define DBUS_GMAIN_FUNCTION_NAME(name) _dbus_py_glib_ ## name
 #endif
 
 #ifndef DBUS_GMAIN_FUNCTION
